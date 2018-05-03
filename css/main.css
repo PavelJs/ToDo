@@ -31,13 +31,22 @@ input, button {
     outline: none;
 }
 
-button, .checkbox {
+button {
     background: none;
     border: 0px;
     color: #888;
     font-size: 15px;
     font-family: sans-serif;
     cursor: pointer;
+    margin: 8px auto;
+}
+
+.checkbox {
+    background: none;
+    border: 0px;
+    color: #888;
+    font-size: 15px;
+    font-family: sans-serif;
     margin: 8px auto;
 }
 
