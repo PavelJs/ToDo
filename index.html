@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Список дел</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/material-icons.css">
+    <script src="./js/react.js"></script>
+    <script src="./js/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  </head>
+  <body>
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+      
+      class Header extends React.Component {
+        render () {
+          return (
+            <div>
+              <h3>{this.props.topic}</h3>
+            </div>
+          );
+        }
+      }
+
+      class Editmode extends React.Component {
+        
+        
+        visibility() {
+          alert ("Здесь вы можете ознакомиться с подробной информацией о задаче!");
+        };
+
+        constructor(props) {
+          super(props);
+          this.state = {
+            edit: false,
+          };
+        };
+
+        edit = () => {
+          this.setState({edit:true})
+        };
+        
+        delete = () => {
+          this.props.deleteBlock (this.props.index)
+        };
+
+        save = () => {
+          this.props.update (this.refs.newTxt.value, this.props.index);
+          this.setState ({edit:false})
+        };
+
+        rendNorm = () => {
+          return (
+            <ul id="editMode">
+              <li>
+                <i className="material-icons checkbox">description</i>
+
+                <input type="text" />
+                <label>{this.props.children}</label>
+
+                <button onClick={this.edit} className="material-icons edit">
+                  <i className="material-icons">edit</i>
+                </button>
+                <button onClick={this.visibility} className="material-icons visibility">
+                  <i className="material-icons">visibility</i>
+                </button>
+                 <button onClick={this.delete} className="material-icons delete">
+                  <i className="material-icons">delete</i>
+                </button>
+              </li>
+            </ul>
+          );
+        };
+
+        rendEdit = () => {
+          return (
+            <ul className="editMode">
+              <li>
+                <i className="material-icons checkbox">description</i>
+
+                <textarea ref="newTxt" defaultValue={this.props.children}></textarea>
+
+                <button onClick={this.save} className="material-icons save">
+                  <i className="material-icons">save</i>
+                </button>
+              </li>
+            </ul>
+          );
+        };
+
+        render () {
+          if (this.state.edit) {
+            return this.rendEdit ();
+          } else {
+            return this.rendNorm ();
+          }
+        }
+      }
+
+
+
+ 
+      class Editor extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            editmodes: []
+          };
+        };
+        add = (text) => {
+          var arr = this.state.editmodes;
+          arr.push (text);
+          this.setState ({editmodes: arr});
+        };
+        deleteBlock = (i) => {
+          var arr = this.state.editmodes;
+          arr.splice (i, 1);
+          this.setState ({editmodes: arr});
+        };
+        updateText = (text, i) => {
+          var arr = this.state.editmodes;
+          arr[i] = text;
+          this.setState ({editmodes: arr});
+        };
+        eachEditmode = (item, i) => {
+          return (
+            <Editmode key={i} index={i} update={this.updateText} deleteBlock={this.deleteBlock}>
+              {item}
+            </Editmode>
+          );
+        };
+        render() {
+          return (
+            <div className="editor">
+              <button onClick={this.add.bind (null, 'Новая задача')} id="add">Добавить задачу</button>
+              {this.state.editmodes.map (this.eachEditmode)}
+            </div>
+          );
+        }
+      }
+      
+      const place = document.getElementById("root");
+
+      ReactDOM.render (
+        <div className="container">
+          
+          <Header topic="Список дел" />
+          <Editor />
+
+        </div>,  
+        place
+      );
+
+    </script>
+     
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
